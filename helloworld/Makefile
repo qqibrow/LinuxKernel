@@ -1,7 +1,10 @@
-obj-m += helloworld.o
-
-all:
-	make -C /lib/modules/$(shell uname -r)/build/ SUBDIRS=$(PWD) modules
+ifneq ($(KERNELRELEASE),)
+	obj-m += helloworld.o
+else
+	KDIR ?= /lib/modules/`uname -r`/build
+default:
+	$(MAKE) -C  $(KDIR) SUBDIRS=$(PWD) modules
 
 clean:
-	make -C /lib/modules/$(shell uname -r)/build/ SUBDIRS=$(PWD) clean
+	$(MAKE) -C  $(KDIR) SUBDIRS=$(PWD) clean
+endif
